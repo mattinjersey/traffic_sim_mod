@@ -1,6 +1,6 @@
 
 const userCanDropObjects=true;
-drawVehIDs=true; // override control_gui.js
+drawVehIDs=false; // override control_gui.js
 
 var nLanes_main=2;
 
@@ -18,7 +18,7 @@ setSlider(slider_qIn, slider_qInVal, 3600*qIn, commaDigits, "veh/h");
 timewarp=2;
 setSlider(slider_timewarp, slider_timewarpVal, timewarp, 1, " times");
 
-fracTruck=0.;
+fracTruck=0.8;
 
 /*######################################################
  Global overall scenario settings and graphics objects
@@ -45,7 +45,7 @@ console.log("after addTouchListeners()");
 
 var isSmartphone=mqSmartphone();  // from css; only influences text size
 
-var refSizePhys=150;              // reference size in m
+var refSizePhys=3*150;              // reference size in m
 
 // these two must be updated in updateDimensions (aspectRatio != const)
 
@@ -90,8 +90,8 @@ var center_yRel=-0.65;  // -1: bottom; 0: top
 var center_xPhys=center_xRel*refSizePhys*aspectRatio; //[m]
 var center_yPhys=center_yRel*refSizePhys;
 
-var road0Len=0.47*refSizePhys*aspectRatio;
-var road1Len=0.47*refSizePhys*aspectRatio;
+var road0Len=0.87*refSizePhys*aspectRatio;
+var road1Len=0.27*refSizePhys*aspectRatio;
 
 
 // def trajectories (do not include doGridding, only for few main scenarios)
@@ -100,11 +100,11 @@ var road1Len=0.47*refSizePhys*aspectRatio;
 
 
 function traj0_x(u){ // physical coordinates
-  return center_xPhys+u-road0Len;
+  return center_xPhys+u-road0Len+270;
 }
 
 function traj0_y(u){ 
-  return center_yPhys;
+  return center_yPhys+u-140;
 }
 
 function traj1_x(u){ 
@@ -112,7 +112,7 @@ function traj1_x(u){
 }
 
 function traj1_y(u){ 
-  return center_yPhys+0.0*u;
+  return center_yPhys;
 }
 
 var trajNet=[[traj0_x,traj0_y], [traj1_x,traj1_y] ]; 
@@ -145,17 +145,16 @@ var road0=new road(0,road0Len,laneWidth,nLanes_main,
 		   trajNet[0],
 		   density, speedInit,fracTruck, isRing);
 
-var road1=new road(42,road1Len,laneWidth,nLanes_main,
-		   trajNet[1],
-		   density, speedInit,fracTruck, isRing);
+//var road1=new road(42,road1Len,laneWidth,nLanes_main,
+	//	   trajNet[1],
+//		   density, speedInit,fracTruck, isRing);
 
-var route1=[road0.roadID, road1.roadID];
-
-
+//var route1=[road0.roadID, road1.roadID];
+var route1=[road0.roadID ];
 // road network (network declared in canvas_gui.js)
 
 network[0]=road0; network[0].drawVehIDs=drawVehIDs;
-network[1]=road1; network[1].drawVehIDs=drawVehIDs;
+//network[1]=road1; network[1].drawVehIDs=drawVehIDs;
 
 
 // add standing virtual vehicles at the end of some road elements
@@ -168,7 +167,7 @@ network[1]=road1; network[1].drawVehIDs=drawVehIDs;
 
 var detectors=[]; // stationaryDetector(road,uRel,integrInterval_s)
 detectors[0]=new stationaryDetector(road0,0.30*road0Len,10);
-detectors[1]=new stationaryDetector(road1,0.80*road1Len,10);
+//detectors[1]=new stationaryDetector(road1,0.80*road1Len,10);
 
 //</NETWORK>
 
@@ -338,7 +337,7 @@ function updateSim(){
   // do all the connecting stuff here
 
     // road.connect(target, uSource, uTarget, offsetLane, conflicts)
-  network[0].connect(network[1],network[0].roadLen,0,0,[]);
+  //network[0].connect(network[1],network[0].roadLen,0,0,[]);
 
   for(var ir=0; ir<network.length; ir++){
 

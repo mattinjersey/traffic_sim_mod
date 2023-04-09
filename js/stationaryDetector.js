@@ -165,7 +165,7 @@ stationaryDetector.prototype.display=function(textsize){
 
 
     // the textbox
-
+    xPixCenter= xPixCenter-100;
     ctx.setTransform(1,0,0,1,0,0); 
     ctx.fillStyle="rgb(255,255,255)";
     ctx.fillRect(xPixCenter-0.5*boxWidth, yPixCenter-0.5*boxHeight,boxWidth,boxHeight);
